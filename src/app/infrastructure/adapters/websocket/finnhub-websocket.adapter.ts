@@ -1,6 +1,5 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { Subject, BehaviorSubject, Observable, timer } from 'rxjs';
-import { retryWhen, delayWhen, tap } from 'rxjs/operators';
+import { Subject, BehaviorSubject, Observable } from 'rxjs';
 import { IWebSocketPort, LiveTrade } from '../../../domain/ports/websocket.port';
 import { environment } from '../../../../environments/environment';
 
