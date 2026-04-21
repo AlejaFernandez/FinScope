@@ -1,34 +1,43 @@
 // @ts-check
-const eslint = require('@eslint/js');
-const tseslint = require('typescript-eslint');
-const angular = require('angular-eslint');
+const tsParser = require('@typescript-eslint/parser');
+const tsPlugin = require('@typescript-eslint/eslint-plugin');
+const angularPlugin = require('@angular-eslint/eslint-plugin');
+const angularTemplatePlugin = require('@angular-eslint/eslint-plugin-template');
+const templateParser = require('@angular-eslint/template-parser');
 
-module.exports = tseslint.config(
+module.exports = [
   {
     files: ['**/*.ts'],
-    extends: [
-      eslint.configs.recommended,
-      ...tseslint.configs.strictTypeChecked,
-      ...angular.configs.tsRecommended,
-    ],
-    processor: angular.processInlineTemplates,
     languageOptions: {
+      parser: tsParser,
       parserOptions: {
         project: true,
         tsconfigRootDir: __dirname,
       },
     },
+    plugins: {
+      '@typescript-eslint': tsPlugin,
+      '@angular-eslint': angularPlugin,
+    },
     rules: {
-      '@angular-eslint/directive-selector': ['error', { type: 'attribute', prefix: 'fs', style: 'camelCase' }],
-      '@angular-eslint/component-selector': ['error', { type: 'element', prefix: 'fs', style: 'kebab-case' }],
-      '@typescript-eslint/explicit-function-return-type': 'error',
       '@typescript-eslint/no-explicit-any': 'warn',
       '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
+      '@angular-eslint/directive-selector': ['error', { type: 'attribute', prefix: 'fs', style: 'camelCase' }],
+      '@angular-eslint/component-selector': ['error', { type: 'element', prefix: 'fs', style: 'kebab-case' }],
+      '@angular-eslint/no-empty-lifecycle-method': 'error',
+      '@angular-eslint/use-lifecycle-interface': 'error',
     },
   },
   {
     files: ['**/*.html'],
-    extends: [...angular.configs.templateRecommended, ...angular.configs.templateAccessibility],
-    rules: {},
-  }
-);
+    languageOptions: {
+      parser: templateParser,
+    },
+    plugins: {
+      '@angular-eslint/template': angularTemplatePlugin,
+    },
+    rules: {
+      '@angular-eslint/template/no-negated-async': 'error',
+    },
+  },
+];
