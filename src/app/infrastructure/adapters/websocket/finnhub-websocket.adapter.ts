@@ -1,16 +1,19 @@
-import { Injectable, OnDestroy } from '@angular/core';
+import { Injectable, OnDestroy, inject, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { Subject, BehaviorSubject, Observable } from 'rxjs';
 import { IWebSocketPort, LiveTrade } from '../../../domain/ports/websocket.port';
 import { environment } from '../../../../environments/environment';
 
 @Injectable()
 export class FinnhubWebSocketAdapter implements IWebSocketPort, OnDestroy {
+  private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
   private ws: WebSocket | null = null;
   private trades = new Subject<LiveTrade>();
   private status = new BehaviorSubject<'connected' | 'disconnected' | 'reconnecting'>('disconnected');
   private retryDelay = 3000;
 
   connect(): void {
+    if (!this.isBrowser) return;
     this.createConnection();
   }
 

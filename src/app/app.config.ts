@@ -1,4 +1,4 @@
-import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
+import { ApplicationConfig, provideZoneChangeDetection, APP_INITIALIZER } from '@angular/core';
 import { provideRouter, withPreloading, PreloadAllModules } from '@angular/router';
 import { provideHttpClient, withFetch } from '@angular/common/http';
 import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
@@ -20,5 +20,11 @@ export const appConfig: ApplicationConfig = {
     { provide: IStockRepository, useClass: FinnhubHttpAdapter },
     { provide: IWebSocketPort, useClass: FinnhubWebSocketAdapter },
     { provide: IStoragePort, useClass: LocalStorageAdapter },
+    {
+      provide: APP_INITIALIZER,
+      useFactory: (ws: IWebSocketPort) => () => ws.connect(),
+      deps: [IWebSocketPort],
+      multi: true,
+    },
   ],
 };
